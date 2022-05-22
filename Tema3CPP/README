@@ -1,0 +1,116 @@
+Pasat Ionut 324CC - Tema3 PCOM
+
+    In vederea implementarii functiilor pentru comunicarea server-client am
+ales sa fac urmatoarele:
+/*----EXIT----*\
+    -se iese din bucla de primire comenzi, nu mai trebuie inchis socketul
+deoarece se deschide si se inchide conexiunea dupa fiecare comanda data (am
+ales sa fac asa deoarece mi s-a parut mai clean decat verificarea la fiecare
+comanda daca socketul este deschis, iar in caz contrar conectarea acestuia).
+/*----REGISTER----*\
+    -ofer un prompt utilizatorului pentru a introduce user-ul si parola
+    -datele introduse le transform intr-un obiect de tip json pe care mai
+     apoi il transform intr-un sir de caractere ascii folosind "dump()"
+    -deschid socket-ul si fac cererea de tip post cu sirul de caractere
+     anterior format
+    -pastrez respunsul serverului si iau codul de status folosind sscanf
+    -folosesc un switch pe codul respectiv, iar in functie de status prelucrez
+     mesajul intors de server sau afisez un mesaj corespunzator
+/*----LOGIN----*\
+    -ofer un prompt utilizatorului pentru a introduce user-ul si parola
+    -datele introduse le transform intr-un obiect de tip json pe care mai
+     apoi il transform intr-un sir de caractere ascii folosind "dump()"
+    -deschid socketul si fac cererea de tip post cu sirul de caractere
+     anterior format (fata de register difera url-ul pe care se face cererea)
+    -pastrez respunsul serverului si iau codul de status folosind sscanf
+    -folosesc un switch pe codul respectiv, iar in functie de status prelucrez
+     mesajul intors de server sau afisez un mesaj corespunzator
+    -in caz de succes pastrez cookie-ul intors de server intr-un string local
+/*----ENTER_LIBRARY----*\
+    -pentru a face dovada autentificarii prelucrez cookie-ul salvat local,
+     deschid socket-ul si fac cererea de tip get
+    -in cazul in care cookie-ul nu e setat (niciun user nu s-a logat), cererea
+     se face cu acesta NULL, caz in care serverul intoarce eroare iar la
+     command prompt se afiseaza mesajul corespunzator
+    -pastrez respunsul serverului si iau codul de status folosind sscanf
+    -folosesc un switch pe codul respectiv, iar in functie de status prelucrez
+     mesajul intors de server sau afisez un mesaj corespunzator
+    -in caz de succes pastrez jwt-ul intors de server intr-un string local
+/*----ADD_BOOK----*\
+    -ofer un prompt utilizatorului pentru a introduce detaliile cartii
+    -datele introduse le transform intr-un obiect de tip json pe care mai
+     apoi il transform intr-un sir de caractere ascii folosind "dump()"
+    -pentru a face dovada autentificarii prelucrez token-ul salvat local,
+     deschid socket-ul si fac cererea de tip post
+    -in cazul in care token-ul nu e setat (nu s-a intrat inca in library),
+     cererea se face cu acest camp NULL, caz in care severul intoarce eroare
+     iar la command prompt se afiseaza mesajul corespunzator
+    -pastrez respunsul serverului si iau codul de status folosind sscanf
+    -folosesc un switch pe codul respectiv, iar in functie de status prelucrez
+     mesajul intors de server sau afisez un mesaj corespunzator
+    -in cazul in care page_count nu este un numar sau este un numar negativ
+     afisez un mesaj corespunzator si astept un input valid
+/*----GET_BOOKS----*\
+    -pentru a face dovada autentificarii prelucrez token-ul salvat local,
+     deschid socket-ul si fac cererea de tip get
+    -in cazul in care token-ul nu e setat (nu s-a intrat inca in library),
+     cererea se face cu acest camp NULL, caz in care severul intoarce eroare
+     iar la command prompt se afiseaza mesajul corespunzator
+    -pastrez respunsul serverului si iau codul de status folosind sscanf
+    -folosesc un switch pe codul respectiv, iar in functie de status prelucrez
+     mesajul intors de server sau afisez un mesaj corespunzator
+    -in caz de succes parcurg array-ul de obiecte json returnat de server cu
+     un for, iar pentru fiecare obiect (carte) afisez "id" si "titlu"
+/*----GET_BOOK----*\
+    -ofer un prompt utilizatorului pentru a introduce id-ul cartii despre care
+     se vor detalii
+    -pentru a face dovada autentificarii prelucrez token-ul salvat local,
+     deschid socket-ul si fac cererea de tip get cu noul url format adaugand
+     id-ul
+    -in cazul in care token-ul nu e setat (nu s-a intrat inca in library),
+     cererea se face cu acest camp NULL, caz in care severul intoarce eroare
+     iar la command prompt se afiseaza mesajul corespunzator
+    -in caz de succes parcurg array-ul de obiecte json returnat de server cu
+     iar pentru obiectul (cartea) intors afisez titlu, autor, gen, editura
+    -in cazul in care nicio carte nu are id-ul introdus afisez eroarea de la
+     server anume 404 Not Found
+/*----LOGOUT----*\
+    -pentru a face dovada autentificarii prelucrez cookie-ul salvat local,
+     deschid socket-ul si fac cererea de tip get
+    -in cazul in care cookie-ul nu e setat (niciun user nu s-a logat), cererea
+     se face cu acesta NULL, caz in care serverul intoarce eroare iar la
+     command prompt se afiseaza mesajul corespunzator
+    -pastrez respunsul serverului si iau codul de status folosind sscanf
+    -folosesc un switch pe codul respectiv, iar in functie de status prelucrez
+     mesajul intors de server sau afisez un mesaj corespunzator
+    -la final golesc cookie-ul si jwt-ul pentru urmatoarea logare si pentru
+     a restrictiona eventualele comenzi inafara de login dupa delogarea
+     utilizatorului
+/*----DELETE_BOOK----*\
+    -ofer un prompt utilizatorului pentru a introduce id-ul cartii pe care
+     vrea sa o stearga
+    -pentru a face dovada autentificarii prelucrez token-ul salvat local,
+     deschid socket-ul si fac cererea de tip get cu noul url format adaugand
+     id-ul
+    -in cazul in care token-ul nu e setat (nu s-a intrat inca in library),
+     cererea se face cu acest camp NULL, caz in care severul intoarce eroare
+     iar la command prompt se afiseaza mesajul corespunzator
+    -pastrez respunsul serverului si iau codul de status folosind sscanf
+    -folosesc un switch pe codul respectiv, iar in functie de status prelucrez
+     mesajul intors de server sau afisez un mesaj corespunzator
+    -in cazul in care nicio carte nu are id-ul introdus afisez eroarea de la
+     server anume 404 Not Found
+    -functia de compute_delete_request este cea de get doar cu antetele
+     schimbate
+/*----DATE_SUPLIMENTARE----*\
+    Am folosit labul 10 ca schelet de inceput. Functiile de request le-am
+modificat sumar, deoarece body_data era un json string, iar functiile mai
+aveau nevoie si de verificarea jwt-ului. Pentru DELETE doar am schimbat
+antetul functiei de GET. In helpers am adaugat si o functie de extract pentru
+un json array fata de cel de json object care era deja.
+    Am ales ca toate sirurile constante sa le definesc global. Asta m-a ajutat
+si la request-uri deoarece le puteam da cast direct la (char *).
+    Functiile de parsat array-uri sau obiecte json sunt luate din documentatia
+librariei nlohmann sau de pe internet.
+    Timp de lucru: aprox. 6 ore
+
